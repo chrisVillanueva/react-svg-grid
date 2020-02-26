@@ -9,11 +9,24 @@ import "./App.css";
 
 class App extends React.Component {
   state = {
-    viewport:  getViewportSize(),
-    gridData: getGridData(),
+    viewport:{},
+    gridData: [],
     wallNodes:{},
   };
   
+  componentDidMount(){
+    this.setState({
+      viewport:  getViewportSize(),
+      gridData: getGridData(),
+    });
+  }
+
+  handleResetGridClick = e => {
+    this.setState({
+      wallNodes:{},
+    });
+  }
+
   handleRectClick = e => {
     e.persist();
     e.preventDefault();
@@ -48,7 +61,8 @@ class App extends React.Component {
     } = this.state;
     const {
       handleRectClick, 
-      handleMouseEnter
+      handleMouseEnter,
+      handleResetGridClick,
     } = this;
     const handlers =  {
       handleRectClick, 
@@ -56,17 +70,25 @@ class App extends React.Component {
     };
     return (
       <div className="App">
-        <svg 
-          width={(viewport.width - 20)} 
-          height={(viewport.height - 20)}
-        >
-          {createNodes(
-            gridData, 
-            handlers,
-            wallNodes,
-            Rect
-            )}
-        </svg>
+        <div className={"app-controls"}>
+          <button onClick={handleResetGridClick}>
+            Reset Grid
+          </button>
+        </div>
+        <div className={"app-ccontainer"}>
+          <svg 
+            width={(viewport.width - 20)} 
+            height={(viewport.height - 20)}
+          >
+            {createNodes(
+              gridData, 
+              handlers,
+              wallNodes,
+              Rect
+              )}
+          </svg>        
+        </div>
+
       </div>
     );
   }
