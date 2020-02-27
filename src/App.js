@@ -9,11 +9,32 @@ import "./App.css";
 
 class App extends React.Component {
   state = {
-    viewport:  getViewportSize(),
-    gridData: getGridData(),
+    viewport:{},
+    gridData: [],
     wallNodes:{},
+    isDefiningWall: false,
   };
   
+  componentDidMount(){
+    this.setState({
+      viewport:  getViewportSize(),
+      gridData: getGridData(),
+      isDefiningWall: false,
+    });
+  }
+
+  handleDefineWallClick = e => {
+    this.setState({
+      isDefiningWall:!this.state.isDefiningWall,
+    });
+  }
+
+  handleResetGridClick = e => {
+    this.setState({
+      wallNodes:{},
+    });
+  }
+
   handleRectClick = e => {
     e.persist();
     e.preventDefault();
@@ -23,7 +44,12 @@ class App extends React.Component {
   handleMouseEnter = e => {
     e.persist();
     const { id } = e.target;
-    const { wallNodes }= this.state;
+    const { wallNodes, isDefiningWall }= this.state;
+
+    if(!isDefiningWall){
+      return;
+    }
+
     const updatedWallNodes = {
       ...wallNodes,
     };
@@ -45,28 +71,43 @@ class App extends React.Component {
       viewport, 
       gridData,
       wallNodes,
+      isDefiningWall,
     } = this.state;
     const {
       handleRectClick, 
-      handleMouseEnter
+      handleMouseEnter,
+      handleResetGridClick,
+      handleDefineWallClick,
     } = this;
     const handlers =  {
       handleRectClick, 
       handleMouseEnter
     };
+    const wallButtonLabel = (isDefiningWall) ? "End Wall" : "Define Wall"
     return (
       <div className="App">
-        <svg 
-          width={(viewport.width - 20)} 
-          height={(viewport.height - 20)}
-        >
-          {createNodes(
-            gridData, 
-            handlers,
-            wallNodes,
-            Rect
-            )}
-        </svg>
+        <div className="app-controls">
+          <button onClick={handleDefineWallClick}>
+            {wallButtonLabel}
+          </button>
+          <button onClick={handleResetGridClick}>
+            Reset Grid
+          </button>
+        </div>
+        <div className="app-ccontainer">
+          <svg 
+            width={(viewport.width - 20)} 
+            height={(viewport.height - 20)}
+          >
+            {createNodes(
+              gridData, 
+              handlers,
+              wallNodes,
+              Rect
+              )}
+          </svg>        
+        </div>
+
       </div>
     );
   }
