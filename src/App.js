@@ -5,6 +5,10 @@ import {
   getGridData, 
   createNodes
 } from './helpers';
+import {
+  START_BLOCKER, 
+  END_BLOCKER
+} from './constants'
 import "./App.css";
 
 class App extends React.Component {
@@ -83,7 +87,9 @@ class App extends React.Component {
       handleRectClick, 
       handleMouseEnter
     };
-    const wallButtonLabel = (isDefiningWall) ? "End Wall" : "Define Wall"
+    const wallButtonLabel = (isDefiningWall) 
+      ? END_BLOCKER 
+      : START_BLOCKER;
     return (
       <div className="App">
         <div className="app-controls">
